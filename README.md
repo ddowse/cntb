@@ -11,7 +11,7 @@ This is the fork for **FreeBSD.**
 3. `gmake`
 4. `gmake install`
 
-The binary `cntb` will be found in `$GOPATH/bin``
+The binary `cntb` will be found in `$GOPATH/bin`
 
 ## Getting Started
 
