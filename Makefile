@@ -1,6 +1,6 @@
 JAVAOPT = '-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true'
 ifndef OUTPUTLOCATION
-	OUTPUTLOCATION = /local/openapi/
+	OUTPUTLOCATION = ${PWD}/openapi/
 endif
 ifndef OPENAPIURL
 	OPENAPIURL = https://api.contabo.com/api-v1.yaml
@@ -14,21 +14,23 @@ build: generate-api-clients build-only unittest
 
 .PHONY: generate-api-clients
 generate-api-clients:
-	rm -rf openapi
-	docker run --rm -v $(OPENAPIVOLUME) --env JAVA_OPTS=$(JAVAOPT) openapitools/openapi-generator-cli:v5.2.1 generate \
+	npm install @openapitools/openapi-generator-cli
+	export JAVA_OPTS=$(JAVAOPT)
+	${PWD}/node_modules/.bin/openapi-generator-cli version-manager set 5.2.1
+	${PWD}/node_modules/.bin/openapi-generator-cli generate \
 	--skip-validate-spec \
 	--input-spec $(OPENAPIURL) \
 	--generator-name  go \
 	--output $(OUTPUTLOCATION)
-	docker container create --name dummy -v openapivolume:/openapi alpine bash
-	docker cp dummy:/openapi/ .
-	docker rm dummy
 
 .PHONY: build-only
 build-only:
 	go mod tidy
 	go mod download
-	export VERSION=$$(git rev-list --tags --max-count=1 | xargs -I {} git describe --tags {}); export COMMIT=$$(git rev-parse HEAD); export TIMESTAMP=$$(date -u +"%Y-%m-%dT%H:%M:%SZ"); go build -ldflags="-w -s -X \"contabo.com/cli/cntb/cmd.version=$$VERSION\" -X \"contabo.com/cli/cntb/cmd.commit=$$COMMIT\" -X \"contabo.com/cli/cntb/cmd.date=$$TIMESTAMP\""
+	export VERSION=$$(git rev-list --tags --max-count=1 | xargs -I {} git describe --tags {}); 
+	export COMMIT=$$(git rev-parse HEAD); 
+	export TIMESTAMP=$$(date -u +"%Y-%m-%dT%H:%M:%SZ"); 
+	go build -ldflags="-w -s -X \"contabo.com/cli/cntb/cmd.version=$$VERSION\" -X \"contabo.com/cli/cntb/cmd.commit=$$COMMIT\" -X \"contabo.com/cli/cntb/cmd.date=$$TIMESTAMP\""
 
 .PHONY: unittest
 unittest:
@@ -48,7 +50,7 @@ install: bats
 
 .PHONY: release
 release: build
-	go get github.com/mitchellh/gox
+	go install github.com/mitchellh/gox@latest
 	mkdir -p dist/
 	rm -rf dist/*
-	export VERSION=$$(git rev-list --tags --max-count=1 | xargs -I {} git describe --tags {}); export COMMIT=$$(git rev-parse HEAD); export TIMESTAMP=$$(date -u +"%Y-%m-%dT%H:%M:%SZ"); gox -osarch="darwin/amd64 linux/amd64 linux/arm64 windows/amd64 darwin/arm64" -ldflags="-w -s -X \"contabo.com/cli/cntb/cmd.version=$$VERSION\" -X \"contabo.com/cli/cntb/cmd.commit=$$COMMIT\" -X \"contabo.com/cli/cntb/cmd.date=$$TIMESTAMP\"" -output="dist/{{.OS}}_{{.Arch}}/{{.Dir}}"
+	export VERSION=$$(git rev-list --tags --max-count=1 | xargs -I {} git describe --tags {}); export COMMIT=$$(git rev-parse HEAD); export TIMESTAMP=$$(date -u +"%Y-%m-%dT%H:%M:%SZ"); $$HOME/go/bin/gox -osarch="freebsd/amd64" -ldflags="-w -s -X \"contabo.com/cli/cntb/cmd.version=$$VERSION\" -X \"contabo.com/cli/cntb/cmd.commit=$$COMMIT\" -X \"contabo.com/cli/cntb/cmd.date=$$TIMESTAMP\"" -output="dist/{{.OS}}_{{.Arch}}/{{.Dir}}"

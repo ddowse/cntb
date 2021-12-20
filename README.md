@@ -1,15 +1,17 @@
-# Contabo Command-Line Interface (CLI)
+# Contabo Command-Line Interface (CLI) 
 
 `cntb` is a command-line interface (CLI) for managing your products from Contabo like VPS and VDS.
 
-## Installation
+This is the fork for **FreeBSD.**
 
-1. Download `cntb` as pre-built executable for your operating system (Windows, MacOS and Linux supported) on the [releases page](https://github.com/contabo/cntb/releases).
-  * MacOS/Linux
-    * curl -L '&lt;link to release&gt;' | tar xz
-  * Windows
-    * Right-click and select extract
-2. You might move the executable to any location on your disk. You may update your `PATH` environment variable for easier invocation.
+## Installation ( Build from Source )
+
+1. `pkg install npm go gmake`
+2. `git clone https://github.com/ddowse/cntb`
+3. `gmake`
+4. `gmake install`
+
+The binary `cntb` will be found in `$GOPATH/bin``
 
 ## Getting Started
 
@@ -105,26 +107,7 @@ fish:
         # To load completions for each session, execute once:
         $ cntb completion fish > ~/.config/fish/completions/cntb.fish
 
-PowerShell:
-
-        PS> cntb completion powershell | Out-String | Invoke-Expression
-
-        # To load completions for every new session, run:
-        PS> cntb completion powershell > cntb.ps1
-        # and source this file from your PowerShell profile.
 ```
-
-## Building from source
-
-1. Clone the `cntb` project.
-2. Download & install `docker` from the official [Docker page](https://www.docker.com/).
-3. Download & install `go` from the offical [Go page](https://golang.org/doc/install).
-
-```sh
-make build
-```
-
-## Affected files and folders
 
 For `cntb` to work it uses some additional files and folders.
 
