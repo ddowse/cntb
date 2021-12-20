@@ -6,9 +6,12 @@ This is the fork for **FreeBSD.**
 
 ## Installation ( Build from Source )
 
-1. `pkg install npm go gmake openjdk16`
-2. `git clone https://github.com/ddowse/cntb`
-3. `gmake`
+```shell
+pkg install npm go gmake openjdk16
+git clone https://github.com/ddowse/cntb
+cd cntb
+gmake
+```
 
 ## Getting Started
 
