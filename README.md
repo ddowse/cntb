@@ -81,12 +81,11 @@ cntb completion
 Bash:
 
         $ source <(cntb completion bash)
+        
+        # To load completions for each session, execute once with root privileges 
+        
+        cntb completion bash > /usr/local/share/bash-completion/completions/cntb
 
-        # To load completions for each session, execute once:
-        # Linux:
-        $ cntb completion bash > /etc/bash_completion.d/cntb
-        # macOS:
-        $ cntb completion bash > /usr/local/etc/bash_completion.d/cntb
 
 Zsh:
 
@@ -109,10 +108,12 @@ fish:
 
 ```
 
-For `cntb` to work it uses some additional files and folders.
+## Runtime configuration
+
+For `cntb` to work it uses some additional files and directories.
 
 * default file for storing settings / preferences is `~/.cntb.yaml`
-* caching folder is `~/.cache/cntb/`
+* caching directory is `~/.cache/cntb/`
 
 ## License
 
